@@ -2,24 +2,29 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../Component/Navbar";
 import Card from "../Component/Card";
 import data from "../data";
-import { saveAs } from 'file-saver';
-
+import { saveAs } from "file-saver";
 
 function SearchMovies() {
   const [query, setQuery] = useState("");
- 
-  const [movies, setMovies] = useState([]);
-  const handleSubmit = e => {
-    e.preventDefault();
-    fetch(`https://api.themoviedb.org/3/search/movie?api_key=d5fe827d77d125eca81f49030e90ce85&language=en-US&query=${query}&page=1&include_adult=false`)
-      .then(res => res.json())
-      .then(newData => {
-        setMovies(prevData => [...newData.results]);
-        
-      });
-  };
-  
 
+  const [movies, setMovies] = useState([]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let query = localStorage.getItem('query');
+
+    if (query) {
+      fetch(
+        `https://api.themoviedb.org/3/search/movie?api_key=d5fe827d77d125eca81f49030e90ce85&language=en-US&query=${query}&page=1&include_adult=false`
+      )
+        .then((res) => res.json())
+        .then((newData) => {
+          setMovies((prevData) => [...newData.results]);
+        });
+    }
+  };
+  useEffect(() => {
+    localStorage.setItem('query', query)
+  }, [query])
   // const searchMovies = async (e) => {
   //   e.preventDefault();
 
